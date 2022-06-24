@@ -1,4 +1,4 @@
-# Solidity contracts
+# Solidity Smart Contracts
 
 ```shell
 npx hardhat accounts
