@@ -1,4 +1,4 @@
-// /*
+/*
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
@@ -61,6 +61,6 @@ describe('Events', function () {
     ).to.be.revertedWith('you are not an owner!');
   });
 });
-// */
+*/
 
 // https://youtu.be/ZzK15vkO38c

@@ -1,3 +1,4 @@
+/*
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
@@ -38,4 +39,5 @@ contract Payments {
 
         balances[msg.sender].payments[paymentNum] = newPayment;
     }
-} 
+}
+*/
