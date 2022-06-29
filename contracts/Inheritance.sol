@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+/*
 import "./Ownable.sol";
 
 abstract contract Balances is Ownable {
@@ -31,5 +32,6 @@ contract Inheritance is Ownable, Balances {
         Balances.withdraw(_to); // the same: super.withdraw(_to);
     } 
 }
+*/
 
 // https://youtu.be/xkjFcdkAJpg

@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+/*
 contract AuctionEngine {
   address public owner;
   uint constant DURATION = 2 days;
@@ -91,3 +92,4 @@ contract AuctionEngine {
     emit AuctionEnded(index, cPrice, msg.sender);
   }
 }
+*/

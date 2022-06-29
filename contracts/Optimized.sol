@@ -1,8 +1,8 @@
-/*
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
+/*
 contract Optimized {
     // 1.
     // uint demo; // Gas used: 67066
