@@ -1,3 +1,4 @@
+/*
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const tokenJSON = require('../artifacts/contracts/ERC20.sol/UAToken.json');
@@ -69,3 +70,4 @@ describe('UAShop', function () {
       .withArgs(sellAmount, buyer.address);
   });
 });
+*/
