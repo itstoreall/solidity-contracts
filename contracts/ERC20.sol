@@ -12,19 +12,19 @@ contract ERC20 is IERC20 {
   mapping(address => uint) balances;
   mapping(address => mapping(address => uint)) allowances;
 
-  function name() external view returns(string memory) {
+  function name() external view override returns(string memory) {
     return _name;
   }
 
-  function symbol() external view returns(string memory) {
+  function symbol() external view override returns(string memory) {
     return _symbol;
   }
 
-  function decimals() external pure returns(uint) {
+  function decimals() external pure override returns(uint) {
     return 18; // 1 token = 1 wei
   }
 
-  function totalSupply() external view returns(uint) {
+  function totalSupply() external view override returns(uint) {
     return totalTokens;
   }
 
@@ -45,11 +45,11 @@ contract ERC20 is IERC20 {
     mint(initialSupply, shop);
   }
 
-  function balanceOf(address account) public view returns(uint) {
+  function balanceOf(address account) public view override returns(uint) {
     return balances[account];
   }
 
-  function transfer(address to, uint amount) external enoughTokens(msg.sender, amount) {
+  function transfer(address to, uint amount) external override enoughTokens(msg.sender, amount) {
     _beforeTokenTransfer(msg.sender, to, amount);
     balances[msg.sender] -= amount;
     balances[to] += amount;
@@ -69,11 +69,11 @@ contract ERC20 is IERC20 {
     totalTokens -= amount;
   }
 
-  function allowance(address _owner, address spender) public view returns(uint) {
+  function allowance(address _owner, address spender) public view override returns(uint) {
     return allowances[_owner][spender];
   }
 
-  function approve(address spender, uint amount) public {
+  function approve(address spender, uint amount) public override {
     _approve(msg.sender, spender, amount);
   }
 
@@ -82,7 +82,7 @@ contract ERC20 is IERC20 {
     emit Approve(sender, spender, amount); // event
   }
 
-  function transferFrom(address sender, address recipient, uint amount) external enoughTokens(sender, amount) {
+  function transferFrom(address sender, address recipient, uint amount) external override enoughTokens(sender, amount) {
     _beforeTokenTransfer(sender, recipient, amount);
     require(allowances[sender][recipient] >= amount, "check allowance!");
     allowances[sender][recipient] -= amount;
@@ -98,5 +98,57 @@ contract ERC20 is IERC20 {
     uint amount
   ) internal virtual {}
 }
+
+contract UAToken is ERC20 {
+  constructor(address shop) ERC20("UAToken", "UAT", 20, shop) {
+
+  }
+}
+
+contract UAShop {
+  IERC20 public token;
+  address payable public owner;
+  event Bought(uint _amount, address indexed _buyer);
+  event Sold(uint _amount, address indexed _seller);
+
+  constructor() {
+    token = new UAToken(address(this));
+    owner = payable(msg.sender);
+  }
+
+  modifier onlyOwner() {
+    require(msg.sender == owner, "not an owner");
+    _;
+  }
+
+  function sell(uint _amountToSell) external {
+    require(_amountToSell > 0 
+    && token.balanceOf(msg.sender) >= _amountToSell, 
+    "incorrect amount"
+    );
+
+    uint allowance = token.allowance(msg.sender, address(this));
+    require(allowance >= _amountToSell, "check allowance");
+
+    token.transferFrom(msg.sender, address(this), _amountToSell);
+
+    payable(msg.sender).transfer(_amountToSell);
+    emit Sold(_amountToSell, msg.sender);
+  }
+
+  receive() external payable {
+    uint tokensToBuy = msg.value; // 1 wei = 1 token
+    require(tokensToBuy > 0, "not enough funds!");
+    require(tokenBalance() >= tokensToBuy, "not enough funds!");
+
+    token.transfer(msg.sender, tokensToBuy);
+    emit Bought(tokensToBuy, msg.sender);
+  }
+
+  function tokenBalance() public view returns(uint) {
+    return token.balanceOf(address(this));
+  }
+}
+
 
 // https://youtu.be/igPcdziCkWU
