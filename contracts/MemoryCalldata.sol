@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 contract MemoryCalldata {
-    function memoryString(string memory _str) external pure returns(bytes32 data) {
+    function memoryString(string memory /*_str*/) external pure returns(bytes32 data) {
         assembly {
             let ptr := mload(64) // "test" -> ptr 192
 
@@ -14,7 +14,7 @@ contract MemoryCalldata {
 
     // ---
 
-    function memoryArray(uint[3] memory _arr) external pure returns(bytes32 data) {
+    function memoryArray(uint[3] memory /*_arr*/) external pure returns(bytes32 data) {
         assembly {
             let ptr := mload(64)
 
@@ -25,7 +25,7 @@ contract MemoryCalldata {
 
     // ---
 
-    function callData(uint[3] memory _arr) external pure returns(bytes memory) {
+    function callData(uint[3] memory /*_arr*/) external pure returns(bytes memory) {
         return msg.data; // bytes: 0x04a32fc0000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003
     }
 
@@ -35,11 +35,11 @@ contract MemoryCalldata {
         return bytes4(keccak256(bytes("work(uint256[3])"))); // 0x1c28968b
     }
 
-    function work(uint[3] memory _arr) external pure returns(bytes4) {
+    function work(uint[3] memory /*_arr*/) external pure returns(bytes4) {
         return bytes4(msg.data[0:4]); // if [1,2,3] -> 0x1c28968b
     }
 
-    function readFromString(string calldata _str) external pure returns(bytes32 _el1) {
+    function readFromString(string calldata /*_str*/) external pure returns(bytes32 _el1) {
         assembly {
             // _el1 := calldataload(4)
             // bytes32: _el1 0x0000000000000000000000000000000000000000000000000000000000000020
@@ -52,7 +52,7 @@ contract MemoryCalldata {
         }
     }
 
-    function readFromArray(uint[3] calldata _arr) external pure returns(bytes32 _el1) {
+    function readFromArray(uint[3] calldata /*_arr*/) external pure returns(bytes32 _el1) {
         assembly {
             _el1 := calldataload(4)
         } // bytes32: _el1 0x0000000000000000000000000000000000000000000000000000000000000001
@@ -60,7 +60,7 @@ contract MemoryCalldata {
 
     // Dynamic array ---
 
-    function readFromDynamicArray(uint[] calldata _dynArr) external pure returns(bytes32 _startIn, bytes32 _elCount, bytes32 _firstElOfArray) {
+    function readFromDynamicArray(uint[] calldata /*_dynArr*/) external pure returns(bytes32 _startIn, bytes32 _elCount, bytes32 _firstElOfArray) {
         assembly {
             _startIn := calldataload(4)
             _elCount := calldataload(add(_startIn, 4))
